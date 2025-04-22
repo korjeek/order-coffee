@@ -63,4 +63,42 @@ function updateBeverageFields(beverage, number) {
     beverage.querySelectorAll(`input[type="checkbox"][name="options"]`).forEach(checkbox => {
         checkbox.name = `options-${number}`;
     });
+
+    
+    const messageText = beverage.querySelector('.message-text');
+    beverage.querySelector('.message-textarea').addEventListener('keyup', e => {
+        let raw = e.target.value;
+        raw = highlight(raw);
+        messageText.innerHTML = raw;
+    });
+
 }
+
+const phrases = [
+    'срочно',
+    'побыстрее',
+    'быстрее',
+    'поскорее',
+    'скорее',
+    'очень нужно'
+  ];
+  const regex = new RegExp(`(${phrases.join('|')})`, 'gi');
+function highlight(text) {
+    return text.replace(regex, (match) => `<b>${match}</b>`);
+  }
+  
+
+document.getElementById('make-order-btn').addEventListener('click', () => {
+    const timeInput = document.getElementById('time-input');
+    var start = new Date();
+    start.setUTCHours(0,0,0,0);
+    const [hours, minutes, seconds = 0] = timeInput.value.split(':').map(Number);
+    const totalSeconds = (hours * 3600 + minutes * 60 + +seconds) * 1000;
+    if (totalSeconds < new Date() - start) {
+        alert("Мы не умеем перемещаться во времени. Выберите время позже, чем текущее");
+        timeInput.style.borderColor = 'red';
+        return;
+    }
+    delete timeInput.style.borderColor;
+    document.getElementById('menu-overlay').style.display = 'none';
+});
