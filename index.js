@@ -31,21 +31,13 @@ function formatNumeric(number, form1, form2, form5) {
 const addButton = document.querySelector('.add-button');
 const form = document.querySelector('form')
 
-const beverages = document.querySelectorAll('.beverage');
-beverages.forEach((beverage, index) => {
-    const number = index + 1;
-    console.log(number)
-    updateBeverageFields(beverage, number);
-    beverage.querySelector('.beverage-count').textContent = `Напиток №${number}`;
-});
+const beverageTemplate = document.querySelector('#beverage-template');
 
-const template = beverages[0].outerHTML;
+let number = 1;
 addButton.addEventListener('click', () => {
-    const newBeverage = new DOMParser()
-        .parseFromString(template, 'text/html')
-        .querySelector('.beverage');
+    let newBeverage = beverageTemplate.content.cloneNode(true);
 
-    const newNumber = form.querySelectorAll('.beverage').length + 1;
+    const newNumber = number++;
     newBeverage.querySelector('.beverage-count').textContent = `Напиток №${newNumber}`;
     updateBeverageFields(newBeverage, newNumber);
 
