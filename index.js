@@ -8,25 +8,55 @@ document.getElementById('menu-close-btn').addEventListener('click', () => {
     document.getElementById('menu-overlay').style.display = 'none';
 });
 
+const orderTable = document.querySelector('.order-table tbody');
+
 function updateOrder() {
     const count = 121;
     document.getElementById('menu-content').textContent = `Вы заказали ${count} ${formatNumeric(count, 'напиток', 'напитка', 'напитков')}`;
+    const beverages = document.querySelectorAll('.beverage');
+    orderTable.innerHTML = '';
+    beverages.forEach(beverage => {
+        const drinkSelect = beverage.querySelector('select');
+        const drinkValue = drinkSelect.value;
+        const drinkName = drinkSelect.querySelector(`option[value="${drinkValue}"]`).textContent;
+
+        const milkRadio = beverage.querySelector('input[type="radio"][name^="milk"]:checked');
+        const milkValue = milkRadio.value;
+        const milkName = milkRadio.nextElementSibling.textContent.trim();
+
+        const options = Array.from(beverage.querySelectorAll('input[type="checkbox"][name^="options"]:checked'))
+            .map(checkbox => checkbox.nextElementSibling.textContent.trim())
+            .join(', ');
+
+        createRow(drinkName, milkName, options)
+    })
+}
+
+function createRow(drink, milk, addition) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${drink}</td>
+        <td>${milk}</td>
+        <td>${addition}</td>
+      `;
+
+    orderTable.appendChild(row);
 }
 
 function formatNumeric(number, form1, form2, form5) {
     const number100 = number % 100;
     if (number100 > 4 && number100 < 21) {
-      return form5;
+        return form5;
     }
     const number10 = number % 10;
     if (number10 === 1) {
-      return form1;
+        return form1;
     }
     if (number10 > 1 && number10 < 5) {
-      return form2;
+        return form2;
     }
     return form5;
-  }
+}
 
 const addButton = document.querySelector('.add-button');
 const form = document.querySelector('form')
