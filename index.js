@@ -27,25 +27,32 @@ function formatNumeric(number, form1, form2, form5) {
     }
     return form5;
   }
-  
+
 const addButton = document.querySelector('.add-button');
 const form = document.querySelector('form')
 
 const beverageTemplate = document.querySelector('#beverage-template');
 
 let number = 1;
+let count = 0;
 addButton.addEventListener('click', () => {
-    let newBeverage = beverageTemplate.content.cloneNode(true);
-
+    let newBeverage = beverageTemplate.content.cloneNode(true).querySelector('.beverage');
     const newNumber = number++;
-    newBeverage.querySelector('.beverage-count').textContent = `Напиток №${newNumber}`;
+    count++;
     updateBeverageFields(newBeverage, newNumber);
-
     const addButtonDiv = addButton.parentElement;
     form.insertBefore(newBeverage, addButtonDiv);
 });
 
 function updateBeverageFields(beverage, number) {
+    beverage.querySelector('.beverage-count').textContent = `Напиток №${number}`;
+    beverage.querySelector('.beverage-remove-btn').addEventListener('click', () => {
+        if (count <= 1) {
+            return;
+        }
+        count--;
+        beverage.remove();
+    });
     const select = beverage.querySelector('select');
     select.name = `drink-${number}`;
 
